@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Submit Temp Unique String App";
+}
+
+<div>
+    <h4 class="display-4">Data Submission Page</h4>
+
+    <p>
+        <span>Enter a sentence of words into the text box. Sentence must be upto 500 characters. The longest valid word will be submitted.</span>
+    </p>
+    <p>
+        <span>Each word within the sentence must follow these rules:</span>
+        <ul>
+            <li>Must contain at least one uppercase letter</li>
+            <li>Must contain at least one lowercase letter</li>
+            <li>Must contain at least one number</li>
+            <li>No character should be repeated</li>
+            <li>Must be at least 8 characters long</li>
+        </ul>
+    </p>
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <input type="text" class="stringInput" name="stringInput" id="stringInput" /> <!-- value="TopScore M HJkl6789 Qwerty123 Test One " />-->
+        <input type="submit" value="Submit" />
+    }
+    @if (ViewBag.Message != null)
+    {
+        <p>
+            <span>@ViewBag.Message</span>
+        </p>
+    }
+
+</div>

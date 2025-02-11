@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Search Feature";
+}
+<div>
+    <h4 class="display-4">Data Display Page</h4>
+    <p>
+        <span>Search for strings already submitted</span>
+    </p>
+    @using (Html.BeginForm("Search", "Home", FormMethod.Post))
+    {
+        <input type="text" name="searchQuery" id="searchQuery" />
+        <input type="submit" value="Search" />
+    }
+    @if (ViewBag.Message != null)
+    {
+        <p>
+            <span>@ViewBag.Message</span>
+        </p>
+    }
+
+</div>
