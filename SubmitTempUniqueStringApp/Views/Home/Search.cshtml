@@ -10,7 +10,14 @@
     {
         <input type="text" name="searchQuery" id="searchQuery" />
         <input type="submit" value="Search" />
+        <span>OR</span>
     }
+    <br />
+    @using (Html.BeginForm("Browse", "Home", FormMethod.Post))
+    {
+        <input type="submit" value="Browse last 10 added words" />
+    }
+    <br />
     @if (ViewBag.Message != null)
     {
         <p>

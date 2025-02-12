@@ -50,9 +50,21 @@ namespace SubmitTempUniqueStringApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string searchQuery)
         {
-            var result = await _dataContext.TopScoreWords.SingleOrDefaultAsync(x => x.Content == searchQuery);
-            ViewBag.Message = (result == null) ? $"{searchQuery} was NOT found." : $"{searchQuery} has been FOUND.";
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                var result = await _dataContext.TopScoreWords.SingleOrDefaultAsync(x => x.Content == searchQuery);
+                ViewBag.Message = (result == null) ? $"{searchQuery} was NOT found." : $"{searchQuery} has been FOUND.";
+            }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Browse()
+        {
+            var lastTenWords = await _dataContext.TopScoreWords.OrderByDescending(x => x.Id).Take(10).ToListAsync();
+            if (lastTenWords.Count > 0)
+                ViewBag.Message = String.Join(",", lastTenWords.Select(x => x.Content).ToArray<string>());
+            return View("Search");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

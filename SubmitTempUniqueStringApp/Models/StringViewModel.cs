@@ -27,25 +27,6 @@ namespace SubmitTempUniqueStringApp.Models
         public bool IsTooLong {  get { return _content?.Length > 500; } }
 
         /// <summary>
-        /// Content consists only of alphanumeric characters and spaces
-        /// </summary>
-        public bool HasInvalidCharacters 
-        {
-            get
-            {
-                if (!IsEmpty && !IsTooLong)
-                {
-                    for (var i = 0; _content.Length < i; i++)
-                    {
-                        if (char.IsLetterOrDigit(_content[i]) || _content[i] == ' ')
-                            return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
         /// The goal is to choose the longest valid word from the string and return it.
         /// If multiple longest valid words are present, return any one of them.
         /// </summary>
@@ -68,21 +49,35 @@ namespace SubmitTempUniqueStringApp.Models
         public List<string> GetValidWords()
         {
             var validWords = new List<string>();
-            if (!IsEmpty && !IsTooLong && !HasInvalidCharacters)
+            if (!IsEmpty && !IsTooLong)
             {
                 foreach (string word in _content.Split(' '))
                 {
-                    // Must contain at least one uppercase letter, one lowercase letter, and one number. Must be at least 8 characters long.
-                    if (word.Any(char.IsUpper) && word.Any(char.IsLower) && word.Any(char.IsDigit) && word.Length >= 8)
+                    var isValid = true;
+
+                    // Content consists only of alphanumeric characters and spaces.
+                    for (var i = 0; i < (word.Length-1); i++)
                     {
-                        // No character should be repeated.
-                        if (!(word.Where((c, i) => i > 0 && c == word[i - 1])
-                            .Cast<char?>()
-                            .FirstOrDefault() != null))
-                        {
-                            validWords.Add(word);
-                        }
+                        if (!(char.IsLetterOrDigit(word[i]) || word[i] == ' '))
+                            isValid = false;
                     }
+
+                    // Must contain at least one uppercase letter, one lowercase letter, and one number. Must be at least 8 characters long.
+                    if (!(word.Any(char.IsUpper) && word.Any(char.IsLower) && word.Any(char.IsDigit) && word.Length >= 8))
+                    {
+                        isValid = false;
+                    }
+
+                    // No character should be repeated.
+                    if (word.Where((c, i) => i > 0 && c == word[i - 1])
+                        .Cast<char?>()
+                        .FirstOrDefault() != null)
+                    {
+                        isValid = false;
+                    }
+
+                    if (isValid)
+                        validWords.Add(word);
                 }
             }
             return validWords;
